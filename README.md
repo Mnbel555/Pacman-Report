@@ -304,3 +304,155 @@ text.draw(_spriteBatch, "score - " + score, new Vector2(3, 3), 24, Text.Color.Wh
 
 ```    
 </details>
+
+<details>
+    <summary>Enemies Movement and Collision</summary>
+The decideDirection method is called to determine the direction the enemy should move in useing pathfinding algorithm to find the shortest path to the target position.The method checks the enemy's current state and the position of the player and other ghosts.Based on the state and positions, the method sets the pathToPacMan variable to the shortest path to the target position.
+  
+```csharp
+  public void decideDirection(Vector2 playerTilePos, Dir playerDir, Controller gameController, Vector2 blinkyPos)
+        {
+            if (!foundpathTile.Equals(currentTile))
+            {
+                if (state == EnemyState.Scatter)
+                {
+                    pathToPacMan = Pathfinding.findPath(currentTile, getScatterTargetPosition(), gameController.tileArray, direction);
+                } else if (state == EnemyState.Chase)
+                {
+                    pathToPacMan = Pathfinding.findPath(currentTile, getChaseTargetPosition(playerTilePos, playerDir, gameController.tileArray), gameController.tileArray, direction);
+                    if (type == GhostType.Inky)
+                    {
+                        pathToPacMan = Pathfinding.findPath(currentTile, getChaseTargetPosition(playerTilePos, playerDir, gameController.tileArray, blinkyPos), gameController.tileArray, direction);
+                    }
+                } else if (state == EnemyState.Frightened)
+                {
+                    pathToPacMan = Pathfinding.findPath(currentTile, getFrightenedTargetPosition(), gameController.tileArray, direction);
+                } else if (state == EnemyState.Eaten)
+                {
+                    pathToPacMan = Pathfinding.findPath(currentTile, getEatenTargetPosition(), gameController.tileArray, direction);
+                }
+                foundpathTile = currentTile;
+            }
+
+
+            if (currentTile.Equals(getEatenTargetPosition()) && state == EnemyState.Eaten)
+            {
+                state = EnemyState.Chase;
+                speed = normalSpeed;
+                MySounds.power_pellet_instance.Play();
+            }
+            if (playerTilePos.Equals(currentTile))
+            {
+                if (state == EnemyState.Frightened)
+                {
+                    getEaten();
+                }
+                if (state != EnemyState.Eaten)
+                { 
+                    colliding = true;
+                    return;
+                }
+            }
+            if (pathToPacMan.Count == 0) { return; }
+
+            if (pathToPacMan[0].X > currentTile.X)
+            {
+                direction = Dir.Right;
+                position.Y = gameController.tileArray[(int)currentTile.X, (int)currentTile.Y].Position.Y;
+            }
+            else if (pathToPacMan[0].X < currentTile.X)
+            {
+                direction = Dir.Left;
+                position.Y = gameController.tileArray[(int)currentTile.X, (int)currentTile.Y].Position.Y;
+            }
+            else if (pathToPacMan[0].Y > currentTile.Y)
+            {
+                direction = Dir.Down;
+                position.X = gameController.tileArray[(int)currentTile.X, (int)currentTile.Y].Position.X;
+            }
+            else if (pathToPacMan[0].Y < currentTile.Y)
+            {
+                direction = Dir.Up;
+                position.X = gameController.tileArray[(int)currentTile.X, (int)currentTile.Y].Position.X;
+            }
+        }
+
+```
+The Move method is called to move the enemy to the next position in the path. it updates the enemy's position based on the direction and speed. the method also checks for collisions with the game board and other ghosts.
+
+```csharp
+  public void Move(GameTime gameTime, Tile[,] tileArray)
+        {
+            float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            switch (direction)
+            {
+                case Dir.Right:
+                    position.X += speed * dt;
+                    if (state == EnemyState.Frightened)
+                    {
+                        if (timerFrightened > 5)
+                        {
+                            enemyAnim.setSourceRects(frightenedRectsEnd);
+                            break;
+                        }
+                        enemyAnim.setSourceRects(frightenedRects);
+                    }
+                    else
+                        enemyAnim.setSourceRects(rectsRight);
+                    break;
+
+                case Dir.Left:
+                    position.X -= speed * dt;
+                    if (state == EnemyState.Frightened)
+                    {
+                        if (timerFrightened > 5)
+                        {
+                            enemyAnim.setSourceRects(frightenedRectsEnd);
+                            break;
+                        }
+                        enemyAnim.setSourceRects(frightenedRects);
+                    }
+                    else
+                        enemyAnim.setSourceRects(rectsLeft);
+                    break;
+
+                case Dir.Down:
+                    position.Y += speed * dt;
+                    if (state == EnemyState.Frightened)
+                    {
+                        if (timerFrightened > 5)
+                        {
+                            enemyAnim.setSourceRects(frightenedRectsEnd);
+                            break;
+                        }
+                        enemyAnim.setSourceRects(frightenedRects);
+                    }
+                    else
+                        enemyAnim.setSourceRects(rectsDown);
+                    break;
+
+                case Dir.Up:
+                    position.Y -= speed * dt;
+                    if (state == EnemyState.Frightened)
+                    {
+                        if (timerFrightened > 5)
+                        {
+                            enemyAnim.setSourceRects(frightenedRectsEnd);
+                            break;
+                        }
+                        enemyAnim.setSourceRects(frightenedRects);
+                    }
+                    else
+                        enemyAnim.setSourceRects(rectsUp);
+                    break;
+
+                case Dir.None:
+                    position = tileArray[(int)currentTile.X, (int)currentTile.Y].Position;
+                    break;
+            }
+        }
+
+```
+</details>
+
