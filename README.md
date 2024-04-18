@@ -23,7 +23,7 @@ Eat all dots while avoiding ghosts.
 - Dots and Power Pellets: Collectible items
 
 ### Gameplay
-- Control Pac-Man with arrow keys.
+- Control Pac-Man with W,A,S,D.
 - Eat dots to score points.
 - Avoid ghosts; they end the game if touched.
 - Eating power pellets allows Pac-Man to eat ghosts temporarily.
@@ -152,7 +152,7 @@ public void Update(GameTime gameTime, Tile[,] tileArray)
 </details>
 
 <details>
-    <summary>ap Design</summary>
+    <summary>Map Design</summary>
   
   
  
