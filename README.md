@@ -456,3 +456,21 @@ The Move method is called to move the enemy to the next position in the path. it
 ```
 </details>
 
+<details>
+    <summary>Sprites</summary>
+This code is loading multiple textures (images) from the content pipeline . These textures include sprites for various game elements such as the player character, debugging indicators, and the Pac-Man logo , similar code is used in various parts of different files in the project.
+```csharp
+GeneralSprites1 = Content.Load<Texture2D>("SpriteSheets/GeneralSprites1");
+            GeneralSprites2 = Content.Load<Texture2D>("SpriteSheets/GeneralSprites2");
+            debuggingDot = Content.Load<Texture2D>("SpriteSheets/debuggingDot");
+            debugLineX = Content.Load<Texture2D>("SpriteSheets/debugLineX");
+            debugLineY = Content.Load<Texture2D>("SpriteSheets/debugLineY");
+            playerDebugLineX = Content.Load<Texture2D>("SpriteSheets/playerDebugLineX");
+            playerDebugLineY = Content.Load<Texture2D>("SpriteSheets/playerDebugLineY");
+            pathfindingDebugLineX = Content.Load<Texture2D>("SpriteSheets/pathfindingDebugLineX");
+            pathfindingDebugLineY = Content.Load<Texture2D>("SpriteSheets/pathfindingDebugLineY");
+            Menu.setPacmanLogo = Content.Load<Texture2D>("SpriteSheets/pac-man-logo");
+
+```
+</details>
+
